@@ -3,6 +3,7 @@ import { Modal, Button, Row, Col, Form } from 'react-bootstrap';
 
 export default function AddTaskModal(props) {
   const [users, setUsers] = useState([]);
+  var today = new Date();
 
   useEffect(() => {
     fetch(process.env.REACT_APP_API + 'users')
@@ -14,32 +15,36 @@ export default function AddTaskModal(props) {
 
   const handleSubmit = event => {
     event.preventDefault();
-    fetch(process.env.REACT_APP_API + 'tasks', {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        TaskDesc: event.target.TaskDesc.value,
-        StartDate: event.target.StartDate.value,
-        EndDate: event.target.EndDate.value,
-        AssignedUserEmail: event.target.Email.value,
-        Category: event.target.Category.value,
-        Priority: event.target.Priority.value,
-        Status: event.target.Status.value,
-      }),
-    })
-      .then(res => res.json())
-      .then(
-        result => {
-          alert(result);
+    if (event.target.EndDate.value < event.target.StartDate.value) {
+      return alert('The End date should higher than the Start Date');
+    } else {
+      fetch(process.env.REACT_APP_API + 'tasks', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
         },
-        error => {
-          console.log(error);
-          alert('Failed');
-        }
-      );
+        body: JSON.stringify({
+          TaskDesc: event.target.TaskDesc.value,
+          StartDate: event.target.StartDate.value,
+          EndDate: event.target.EndDate.value,
+          AssignedUserEmail: event.target.Email.value,
+          Category: event.target.Category.value,
+          Priority: event.target.Priority.value,
+          Status: event.target.Status.value,
+        }),
+      })
+        .then(res => res.json())
+        .then(
+          result => {
+            alert(result);
+          },
+          error => {
+            console.log(error);
+            alert('Failed');
+          }
+        );
+    }
   };
 
   return (
@@ -71,6 +76,13 @@ export default function AddTaskModal(props) {
                   <Form.Control
                     type='date'
                     name='StartDate'
+                    min={
+                      today.getFullYear() +
+                      '-' +
+                      (today.getMonth() + 1) +
+                      '-' +
+                      today.getDate()
+                    }
                     required
                     placeholder='Start Date'
                   />
@@ -80,6 +92,13 @@ export default function AddTaskModal(props) {
                   <Form.Control
                     type='date'
                     name='EndDate'
+                    min={
+                      today.getFullYear() +
+                      '-' +
+                      (today.getMonth() + 1) +
+                      '-' +
+                      today.getDate()
+                    }
                     required
                     placeholder='End Date'
                   />

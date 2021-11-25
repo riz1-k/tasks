@@ -3,7 +3,7 @@ import { Modal, Button, Row, Col, Form, Image } from 'react-bootstrap';
 
 export default function EditTaskModal(props) {
   const [users, setUsers] = useState([]);
-
+  var today = new Date();
   const {
     taskid,
     taskdesc,
@@ -97,6 +97,13 @@ export default function EditTaskModal(props) {
                     type='date'
                     name='StartDate'
                     required
+                    min={
+                      today.getFullYear() +
+                      '-' +
+                      (today.getMonth() + 1) +
+                      '-' +
+                      today.getDate()
+                    }
                     placeholder='Start Date'
                     defaultValue={startdate}
                   />
@@ -107,6 +114,13 @@ export default function EditTaskModal(props) {
                     type='date'
                     name='EndDate'
                     defaultValue={enddate}
+                    min={
+                      today.getFullYear() +
+                      '-' +
+                      (today.getMonth() + 1) +
+                      '-' +
+                      today.getDate()
+                    }
                     required
                     placeholder='End Date'
                   />
